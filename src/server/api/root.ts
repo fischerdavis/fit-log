@@ -1,4 +1,4 @@
-import { challengeRouter } from "@/server/api/routers/example";
+import { challengeRouter } from "@/server/api/routers/challenge";
 import { createTRPCRouter } from "@/server/api/trpc";
 
 /**
