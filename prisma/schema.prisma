@@ -7,12 +7,8 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
-  // NOTE: When using mysql or sqlserver, uncomment the @db.Text annotations in model Account below
-  // Further reading:
-  // https://next-auth.js.org/adapters/prisma#create-the-prisma-schema
-  // https://www.prisma.io/docs/reference/api-reference/prisma-schema-reference#string
-  url      = env("DATABASE_URL")
+  provider = "postgresql"
+  url      = env("DATABASE_URL") // uses connection pooling
 }
 
 model Rep {
@@ -25,13 +21,14 @@ model Rep {
 }
 
 model Day {
-  id        String      @id @default(cuid())
-  day       String      @default("0")
-  Challenge Challenge[]
-  repId     String
-  rep       Rep         @relation(fields: [repId], references: [id], onDelete: Cascade)
-  userId    String
-  user      User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id          String     @id @default(cuid())
+  day         String     @default("0")
+  repId       String
+  rep         Rep        @relation(fields: [repId], references: [id], onDelete: Cascade)
+  userId      String
+  user        User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  Challenge   Challenge? @relation(fields: [challengeId], references: [id])
+  challengeId String?
 }
 
 model Challenge {
@@ -39,8 +36,7 @@ model Challenge {
   name              String              @default("")
   createdAt         DateTime            @default(now())
   updatedAt         DateTime            @updatedAt
-  dayId             String
-  day               Day                 @relation(fields: [dayId], references: [id], onDelete: Cascade)
+  Day               Day[]
   userId            String
   user              User                @relation(fields: [userId], references: [id], onDelete: Cascade)
   ChallengeStatuses ChallengeStatuses[]
