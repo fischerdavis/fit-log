@@ -2,53 +2,44 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider        = "prisma-client-js"
-  previewFeatures = ["jsonProtocol"]
+  provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL") // uses connection pooling
+  provider     = "mysql"
+  url          = env("DATABASE_URL")
+  relationMode = "prisma"
 }
 
 model Rep {
-  id     String @id @default(cuid())
-  name   String @default("")
-  reps   String @default("")
-  Day    Day[]
-  userId String
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id        String  @id @default(cuid())
+  name      String  @default("")
+  reps      String  @default("")
+  completed Boolean @default(false)
+  userId    String
 }
 
 model Day {
-  id          String     @id @default(cuid())
-  day         String     @default("0")
+  id          String  @id @default(cuid())
+  day         String  @default("0")
   repId       String
-  rep         Rep        @relation(fields: [repId], references: [id], onDelete: Cascade)
   userId      String
-  user        User       @relation(fields: [userId], references: [id], onDelete: Cascade)
-  Challenge   Challenge? @relation(fields: [challengeId], references: [id])
   challengeId String?
 }
 
 model Challenge {
-  id                String              @id @default(cuid())
-  name              String              @default("")
-  createdAt         DateTime            @default(now())
-  updatedAt         DateTime            @updatedAt
-  Day               Day[]
-  userId            String
-  user              User                @relation(fields: [userId], references: [id], onDelete: Cascade)
-  ChallengeStatuses ChallengeStatuses[]
+  id        String   @id @default(cuid())
+  name      String   @default("")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  userId    String
 }
 
 model ChallengeStatuses {
-  id          String    @id @default(cuid())
-  complete    Boolean   @default(false)
+  id          String  @id @default(cuid())
+  complete    Boolean @default(false)
   userId      String
-  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   challengeId String
-  challenge   Challenge @relation(fields: [challengeId], references: [id], onDelete: Cascade)
 }
 
 // Necessary for Next auth
@@ -65,7 +56,6 @@ model Account {
   scope             String?
   id_token          String? // @db.Text
   session_state     String?
-  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
 }
@@ -75,21 +65,14 @@ model Session {
   sessionToken String   @unique
   userId       String
   expires      DateTime
-  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model User {
-  id                String              @id @default(cuid())
-  name              String?
-  email             String?             @unique
-  emailVerified     DateTime?
-  image             String?
-  accounts          Account[]
-  sessions          Session[]
-  Challenge         Challenge[]
-  Rep               Rep[]
-  Day               Day[]
-  ChallengeStatuses ChallengeStatuses[]
+  id            String    @id @default(cuid())
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime?
+  image         String?
 }
 
 model VerificationToken {
