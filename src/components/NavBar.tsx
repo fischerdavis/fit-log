@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { ThemeToggle } from "@/components/ThemeToggle";
 
 const NavBar = () => (
   <nav className="border-gray-200 bg-white dark:bg-gray-900">
@@ -20,6 +21,7 @@ const NavBar = () => (
         >
           Home
         </Link>
+        <ThemeToggle />
       </div>
     </div>
   </nav>
