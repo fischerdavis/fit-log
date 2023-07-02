@@ -21,7 +21,7 @@ export const DialogBox = ({ text = "" }: { text: string }) => {
         <DialogHeader>
           <DialogTitle>{text}</DialogTitle>
           <DialogDescription>
-            Make changes to your profile here. Click save when you're done.
+            Make changes to your profile here.
           </DialogDescription>
         </DialogHeader>
         <div className="grid gap-4 py-4">
